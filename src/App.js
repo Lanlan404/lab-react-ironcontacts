@@ -10,7 +10,7 @@ function App() {
 
   function addContact() {
     const idArr = contactsList.map((el) => el.id)
-    const newArr = contacts.filter((el) => { if (!idArr.includes(el.id)) { return el } })
+    const newArr = contacts.filter((el) => { if (!idArr.includes(el.id)) { return el } else {return 0} })
     const randomContact = newArr[Math.floor(Math.random() * newArr.length)]
     const contactsArray = contactsList.slice()
     contactsArray.push(randomContact)
@@ -19,16 +19,14 @@ function App() {
 
   function sortPopularity() {
     const idArr = contactsList.map((el) => el.id)
-    const newArr = contacts.filter((el) => { if (idArr.includes(el.id)) { return el } })
+    const newArr = contacts.filter((el) => { if (idArr.includes(el.id)) { return el } else {return 0} })
     newArr.sort(function(a,b){return b.popularity-a.popularity})
     setContactsList(newArr)
   }
 
   function sortName() {
-    
     const idArr = contactsList.map((el) => el.id)
-    const newArr = contacts.filter((el) => { if (idArr.includes(el.id)) { return el } })
-    console.log("newarr1",newArr)
+    const newArr = contacts.filter((el) => { if (idArr.includes(el.id)) { return el } else {return 0} })
     newArr.sort((a, b) => {
       const nameA = a.name.toUpperCase(); // ignore upper and lowercase
       const nameB = b.name.toUpperCase(); // ignore upper and lowercase
@@ -38,11 +36,15 @@ function App() {
       if (nameA > nameB) {
         return 1;
       }
-      // names must be equal
       return 0;
     });
-    
-    console.log("newarr2",newArr)
+    setContactsList(newArr)
+  }
+
+  function deleteContact(el){
+    const idArr = contactsList.map((el) => el.id)
+    const newArr = contacts.filter((el) => { if (idArr.includes(el.id)) { return el } else {return 0} })
+    newArr.splice(el.index,1)
     setContactsList(newArr)
   }
 
@@ -59,15 +61,17 @@ function App() {
         <th>Popularity</th>
         <th>Won Oscar</th>
         <th>Won Emmy</th>
+        <th>Action</th>
       </tr></thead>
       <tbody>
-        {contactsList.map(({ pictureUrl, name, popularity, wonOscar, wonEmmy }) => {
-          return (<tr>
-            <td><img src={pictureUrl} alt="la photo du user" /></td>
-            <td>{name}</td>
-            <td>{popularity}</td>
-            <td>{wonOscar ? "🏆" : ""}</td>
-            <td>{wonEmmy && "🏆"}</td>
+        {contactsList.map((el) => {
+          return (<tr key={el.id}>
+            <td><img src={el.pictureUrl} alt="visage de la personne" /></td>
+            <td>{el.name}</td>
+            <td>{el.popularity}</td>
+            <td>{el.wonOscar ? "🏆" : ""}</td>
+            <td>{el.wonEmmy && "🏆"}</td>
+            <td><button onClick={deleteContact}>Delete</button></td>
           </tr>)
         })}
       </tbody>
